@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Gzip_Detector</title>
+
+    <!-- WinJS references -->
+    <link href="//Microsoft.WinJS.1.0/css/ui-dark.css" rel="stylesheet" />
+    <script src="//Microsoft.WinJS.1.0/js/base.js"></script>
+    <script src="//Microsoft.WinJS.1.0/js/ui.js"></script>
+
+    <script src="/js/cordova-2.2.0.js"></script>
+
+    <!-- Gzip_Detector references -->
+    <link href="/css/default.css" rel="stylesheet" />
+    <script src="/js/default.js"></script>
+    <script>
+        function log(m) {
+            m = toStaticHTML(m);
+            document.getElementById("result").innerHTML += m + "<br/>";
+        }
+
+        function scan() {
+            url = document.getElementById("urltoscan").value;
+            console.log("Scanning " + url);
+            if (url == "") {
+                navigator.notification.alert("Please enter a URL to scan.");
+                return;
+            }
+            xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    //log("Received " + xmlhttp.responseText);
+                    data = JSON.parse(xmlhttp.responseText);
+                    if (data[url]) {
+                        log(url + " is using Gzip.");
+                    } else {
+                        log(url + " is not using Gzip.");
+                    }
+                }
+            };
+            serviceurl = "http://mortalpowers.com/gzip-detector.php?service-url=" + url;
+            xmlhttp.open("GET", serviceurl, true);
+            xmlhttp.send(null);
+        }
+
+    
+
+    </script>
+</head>
+<body>
+    <div id="page">
+        <h1>Gzip Detector</h1>
+        <p>
+            <input id="urltoscan" type="url" name="urltoscan" required="" />
+            <button onclick="scan();">Scan</button>
+            <span style="" id="result"></span>
+        </p>
+    </div>
+
+
+</body>
+</html>
